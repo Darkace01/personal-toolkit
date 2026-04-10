@@ -1,0 +1,12 @@
+{
+  "name": "personal-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "check": "pnpm -r check"
+  }
+}
