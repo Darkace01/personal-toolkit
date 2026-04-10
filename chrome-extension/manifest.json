@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Personal Toolkit - GitHub Themes & CSS Snippets",
+  "version": "1.0.0",
+  "description": "Override GitHub themes and inject custom CSS snippets on any website",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content-script.ts"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Personal Toolkit"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  }
+}
