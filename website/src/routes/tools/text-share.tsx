@@ -2,11 +2,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
   generateShareId,
-  validateShareContent,
-  maskContent,
-  isExpired,
   hasReachedMaxAccess,
+  isExpired,
   type TextShare,
+  validateShareContent,
 } from '../../lib/text-share';
 
 export const Route = createFileRoute('/tools/text-share')({
@@ -131,6 +130,7 @@ function TextSharePage() {
           </label>
         </div>
         <button
+          type="button"
           onClick={create}
           className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 font-bold transition-all"
         >
@@ -156,6 +156,7 @@ function TextSharePage() {
             className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus:border-violet-500"
           />
           <button
+            type="button"
             onClick={retrieve}
             className="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-sm font-semibold"
           >

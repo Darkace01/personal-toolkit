@@ -8,7 +8,8 @@ export const Route = createFileRoute('/')({
 const tools = [
   {
     title: 'Password Generator',
-    description: 'Generate secure, random passwords with full control over character sets and length.',
+    description:
+      'Generate secure, random passwords with full control over character sets and length.',
     emoji: '🔐',
     href: '/tools/password-generator',
     gradient: 'from-pink-500 to-rose-500',

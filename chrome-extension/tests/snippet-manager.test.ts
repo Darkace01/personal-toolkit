@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  matchesUrl,
+  type CssSnippet,
+  deleteSnippet,
   generateId,
   getSnippets,
-  saveSnippet,
-  updateSnippet,
-  deleteSnippet,
-  toggleSnippet,
   getSnippetsForUrl,
-  type CssSnippet,
+  matchesUrl,
+  saveSnippet,
+  toggleSnippet,
+  updateSnippet,
 } from '../src/snippets/snippet-manager';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -264,7 +264,7 @@ describe('saveSnippet()', () => {
     );
     (chrome.storage.sync.set as ReturnType<typeof vi.fn>).mockImplementation(
       (data: Record<string, unknown>, callback: () => void) => {
-        stored = data['cssSnippets'] as CssSnippet[];
+        stored = data.cssSnippets as CssSnippet[];
         callback();
       },
     );
@@ -343,12 +343,11 @@ describe('deleteSnippet()', () => {
     let stored = [s1, s2];
 
     (chrome.storage.sync.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
-        cb({ cssSnippets: stored }),
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ cssSnippets: stored }),
     );
     (chrome.storage.sync.set as ReturnType<typeof vi.fn>).mockImplementation(
       (data: Record<string, unknown>, cb: () => void) => {
-        stored = data['cssSnippets'] as CssSnippet[];
+        stored = data.cssSnippets as CssSnippet[];
         cb();
       },
     );
@@ -375,12 +374,11 @@ describe('toggleSnippet()', () => {
     let stored = [snippet];
 
     (chrome.storage.sync.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
-        cb({ cssSnippets: stored }),
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ cssSnippets: stored }),
     );
     (chrome.storage.sync.set as ReturnType<typeof vi.fn>).mockImplementation(
       (data: Record<string, unknown>, cb: () => void) => {
-        stored = data['cssSnippets'] as CssSnippet[];
+        stored = data.cssSnippets as CssSnippet[];
         cb();
       },
     );
@@ -394,12 +392,11 @@ describe('toggleSnippet()', () => {
     let stored = [snippet];
 
     (chrome.storage.sync.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
-        cb({ cssSnippets: stored }),
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ cssSnippets: stored }),
     );
     (chrome.storage.sync.set as ReturnType<typeof vi.fn>).mockImplementation(
       (data: Record<string, unknown>, cb: () => void) => {
-        stored = data['cssSnippets'] as CssSnippet[];
+        stored = data.cssSnippets as CssSnippet[];
         cb();
       },
     );

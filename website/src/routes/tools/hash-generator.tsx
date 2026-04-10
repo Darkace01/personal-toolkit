@@ -35,8 +35,14 @@ function HashGeneratorPage() {
       <p className="text-gray-400 mb-8">Generate MD5, SHA-1, SHA-256, and SHA-512 hashes.</p>
 
       <div className="mb-4">
-        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Input</label>
+        <label
+          htmlFor="hash-input"
+          className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block"
+        >
+          Input
+        </label>
         <textarea
+          id="hash-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="w-full h-32 bg-gray-900 border border-gray-700 rounded-xl p-4 font-mono text-sm text-gray-200 resize-none focus:outline-none focus:border-red-500"
@@ -45,6 +51,7 @@ function HashGeneratorPage() {
       </div>
 
       <button
+        type="button"
         onClick={generate}
         className="mb-8 w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 font-bold transition-all"
       >
@@ -56,15 +63,20 @@ function HashGeneratorPage() {
           {ALGORITHMS.map((algo) => (
             <div key={algo} className="bg-gray-900 border border-gray-700 rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-red-400 uppercase">{ALGORITHM_LABELS[algo]}</span>
+                <span className="text-xs font-bold text-red-400 uppercase">
+                  {ALGORITHM_LABELS[algo]}
+                </span>
                 <button
+                  type="button"
                   onClick={() => copy(algo, hashes[algo])}
                   className="text-xs px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition-colors"
                 >
                   {copiedKey === algo ? '✅ Copied' : '📋 Copy'}
                 </button>
               </div>
-              <code className="text-xs font-mono text-gray-300 break-all block">{hashes[algo]}</code>
+              <code className="text-xs font-mono text-gray-300 break-all block">
+                {hashes[algo]}
+              </code>
             </div>
           ))}
         </div>

@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  generatePassword,
   calculateStrength,
   generateMultiplePasswords,
+  generatePassword,
   type PasswordOptions,
 } from '../src/lib/password-generator';
 
@@ -157,7 +157,9 @@ describe('generateMultiplePasswords', () => {
 
   it('all returned passwords have the correct length', () => {
     const passwords = generateMultiplePasswords({ ...base, length: 12 }, 5);
-    passwords.forEach((pw) => expect(pw).toHaveLength(12));
+    for (const pw of passwords) {
+      expect(pw).toHaveLength(12);
+    }
   });
 
   it('passwords in bulk are unique', () => {

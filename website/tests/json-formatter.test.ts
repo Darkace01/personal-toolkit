@@ -1,10 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import {
-  formatJson,
-  minifyJson,
-  validateJson,
-  sortJsonKeys,
-} from '../src/lib/json-formatter';
+import { describe, expect, it } from 'vitest';
+import { formatJson, minifyJson, sortJsonKeys, validateJson } from '../src/lib/json-formatter';
 
 describe('formatJson', () => {
   it('formats valid JSON with default 2-space indentation', () => {

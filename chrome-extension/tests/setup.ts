@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
-// Mock chrome APIs
-global.chrome = {
+// Mock chrome APIs for testing
+const chromeMock = {
   storage: {
     sync: {
       get: vi.fn(),
@@ -28,4 +28,7 @@ global.chrome = {
     insertCSS: vi.fn(),
     removeCSS: vi.fn(),
   },
-} as any;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as Record<string, unknown>).chrome = chromeMock;

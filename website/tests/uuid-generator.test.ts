@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  generateUuidV4,
-  generateUuidV1,
-  generateMultipleUuids,
-  isValidUuid,
   formatUuid,
+  generateMultipleUuids,
+  generateUuidV1,
+  generateUuidV4,
+  isValidUuid,
 } from '../src/lib/uuid-generator';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -85,11 +85,15 @@ describe('generateMultipleUuids', () => {
   });
 
   it('all generated v4 UUIDs are valid', () => {
-    generateMultipleUuids('v4', 10).forEach((u) => expect(isValidUuid(u)).toBe(true));
+    for (const u of generateMultipleUuids('v4', 10)) {
+      expect(isValidUuid(u)).toBe(true);
+    }
   });
 
   it('all generated v1 UUIDs are valid', () => {
-    generateMultipleUuids('v1', 10).forEach((u) => expect(isValidUuid(u)).toBe(true));
+    for (const u of generateMultipleUuids('v1', 10)) {
+      expect(isValidUuid(u)).toBe(true);
+    }
   });
 
   it('all generated UUIDs are unique', () => {

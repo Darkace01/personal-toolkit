@@ -6,13 +6,17 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "lint": "biome lint ./src ./tests",
+    "format": "biome format --write ./src ./tests",
+    "check": "biome check --write ./src ./tests"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.11",
     "@types/chrome": "^0.0.268",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0",
     "@vitest/coverage-v8": "^1.6.0",
-    "jsdom": "^24.0.0"
+    "jsdom": "^24.0.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

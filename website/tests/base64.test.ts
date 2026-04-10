@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  encodeBase64,
   decodeBase64,
-  isValidBase64,
-  encodeBase64Url,
   decodeBase64Url,
+  encodeBase64,
+  encodeBase64Url,
+  isValidBase64,
 } from '../src/lib/base64';
 
 describe('encodeBase64', () => {

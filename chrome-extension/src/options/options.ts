@@ -1,15 +1,19 @@
 import {
+  type CssSnippet,
+  deleteSnippet,
   getSnippets,
   saveSnippet,
-  updateSnippet,
-  deleteSnippet,
   toggleSnippet,
-  type CssSnippet,
+  updateSnippet,
 } from '../snippets/snippet-manager.js';
 
 let editingId: string | null = null;
 
-const $ = <T extends Element>(sel: string) => document.querySelector<T>(sel)!;
+const $ = <T extends Element>(sel: string): T => {
+  const el = document.querySelector<T>(sel);
+  if (!el) throw new Error(`Element not found: ${sel}`);
+  return el;
+};
 
 const modal = $('#modal-overlay');
 const modalTitle = $('#modal-title');
@@ -86,7 +90,9 @@ async function renderSnippets(): Promise<void> {
   const emptyState = $('#empty-state');
 
   // Remove existing cards
-  list.querySelectorAll('.snippet-card').forEach((el) => el.remove());
+  for (const el of list.querySelectorAll('.snippet-card')) {
+    el.remove();
+  }
 
   if (snippets.length === 0) {
     emptyState.style.display = '';
@@ -126,7 +132,11 @@ async function renderSnippets(): Promise<void> {
         const snippet = snippets.find((s) => s.id === id);
         if (snippet) openModal(snippet);
       } else if (action === 'delete') {
-        if (confirm(`Delete snippet "${btn.closest('.snippet-card')?.querySelector('.snippet-name')?.textContent}"?`)) {
+        if (
+          confirm(
+            `Delete snippet "${btn.closest('.snippet-card')?.querySelector('.snippet-name')?.textContent}"?`,
+          )
+        ) {
           await deleteSnippet(id);
           chrome.runtime.sendMessage({ type: 'SNIPPET_CHANGED' }).catch(() => {});
           await renderSnippets();

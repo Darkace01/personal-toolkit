@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   generateShareId,
-  isExpired,
   hasReachedMaxAccess,
+  isExpired,
   maskContent,
-  validateShareContent,
   type TextShare,
+  validateShareContent,
 } from '../src/lib/text-share';
 
 function makeShare(overrides: Partial<TextShare> = {}): TextShare {
@@ -88,13 +88,13 @@ describe('maskContent', () => {
   it('truncates and appends ellipsis when content is longer than limit', () => {
     const content = 'a'.repeat(100);
     const masked = maskContent(content, 50);
-    expect(masked).toBe('a'.repeat(50) + '...');
+    expect(masked).toBe(`${'a'.repeat(50)}...`);
   });
 
   it('uses 50 as the default limit', () => {
     const content = 'a'.repeat(100);
     const masked = maskContent(content);
-    expect(masked).toBe('a'.repeat(50) + '...');
+    expect(masked).toBe(`${'a'.repeat(50)}...`);
   });
 
   it('returns the full content when length equals the limit', () => {

@@ -6,65 +6,65 @@
   <title>Personal Toolkit</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      width: 360px;
-      min-height: 200px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 13px;
-      background: #0d1117;
-      color: #e6edf3;
-    }
-    header {
-      padding: 12px 16px;
-      background: #161b22;
-      border-bottom: 1px solid #30363d;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    header h1 { font-size: 14px; font-weight: 600; }
-    .section { padding: 12px 16px; border-bottom: 1px solid #21262d; }
-    .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: #6e7681; margin-bottom: 8px; }
-    .theme-list { display: flex; flex-direction: column; gap: 4px; }
-    .theme-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .theme-item:hover { background: #21262d; }
-    .theme-item.active { background: #1f6feb22; }
-    .theme-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-    .theme-name { flex: 1; font-weight: 500; }
-    .checkmark { color: #58a6ff; font-size: 14px; }
-    .none-btn {
-      margin-top: 6px;
-      width: 100%;
-      padding: 5px;
-      background: transparent;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      color: #8b949e;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .none-btn:hover { background: #21262d; }
-    .actions { padding: 10px 16px; display: flex; gap: 8px; }
-    .btn {
-      flex: 1;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid #30363d;
-      background: #21262d;
-      color: #e6edf3;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .btn:hover { background: #30363d; }
-    .snippet-count { font-size: 11px; color: #8b949e; }
+                body {
+                  width: 360px;
+                  min-height: 200px;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                  font-size: 13px;
+                  background: #0d1117;
+                  color: #e6edf3;
+                }
+                header {
+                  padding: 12px 16px;
+                  background: #161b22;
+                  border-bottom: 1px solid #30363d;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                }
+                header h1 { font-size: 14px; font-weight: 600; }
+                .section { padding: 12px 16px; border-bottom: 1px solid #21262d; }
+                .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: #6e7681; margin-bottom: 8px; }
+                .theme-list { display: flex; flex-direction: column; gap: 4px; }
+                .theme-item {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 6px 8px;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  transition: background 0.15s;
+                }
+                .theme-item:hover { background: #21262d; }
+                .theme-item.active { background: #1f6feb22; }
+                .theme-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+                .theme-name { flex: 1; font-weight: 500; }
+                .checkmark { color: #58a6ff; font-size: 14px; }
+                .none-btn {
+                  margin-top: 6px;
+                  width: 100%;
+                  padding: 5px;
+                  background: transparent;
+                  border: 1px solid #30363d;
+                  border-radius: 6px;
+                  color: #8b949e;
+                  cursor: pointer;
+                  font-size: 12px;
+                }
+                .none-btn:hover { background: #21262d; }
+                .actions { padding: 10px 16px; display: flex; gap: 8px; }
+                .btn {
+                  flex: 1;
+                  padding: 6px 12px;
+                  border-radius: 6px;
+                  border: 1px solid #30363d;
+                  background: #21262d;
+                  color: #e6edf3;
+                  cursor: pointer;
+                  font-size: 12px;
+                }
+                .btn:hover { background: #30363d; }
+                .snippet-count { font-size: 11px; color: #8b949e; }
   </style>
 </head>
 <body>
@@ -75,7 +75,7 @@
   <div class="section">
     <h2>GitHub Theme</h2>
     <div class="theme-list" id="theme-list"></div>
-    <button class="none-btn" id="no-theme-btn">No theme override</button>
+    <button type="button" class="none-btn" id="no-theme-btn">No theme override</button>
   </div>
 
   <div class="section">
@@ -84,7 +84,7 @@
   </div>
 
   <div class="actions">
-    <button class="btn" id="options-btn">Open Options</button>
+    <button type="button" class="btn" id="options-btn">Open Options</button>
   </div>
 
   <script type="module" src="popup.ts"></script>

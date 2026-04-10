@@ -39,7 +39,7 @@ export function hasReachedMaxAccess(share: TextShare): boolean {
 
 export function maskContent(content: string, chars = 50): string {
   if (content.length <= chars) return content;
-  return content.slice(0, chars) + '...';
+  return `${content.slice(0, chars)}...`;
 }
 
 export function validateShareContent(content: string): { valid: boolean; error?: string } {

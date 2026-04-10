@@ -1,5 +1,5 @@
-import { getThemes, getActiveTheme, setActiveTheme } from '../themes/themes.js';
 import { getSnippets } from '../snippets/snippet-manager.js';
+import { getActiveTheme, getThemes, setActiveTheme } from '../themes/themes.js';
 
 const THEME_DOTS: Record<string, string> = {
   'dark-pro': '#58a6ff',
@@ -15,11 +15,12 @@ async function init(): Promise<void> {
   const snippets = await getSnippets();
 
   // Render theme list
-  const list = document.getElementById('theme-list')!;
+  const list = document.getElementById('theme-list');
+  if (!list) return;
   for (const theme of themes) {
     const item = document.createElement('div');
     item.className = `theme-item${activeId === theme.id ? ' active' : ''}`;
-    item.dataset['id'] = theme.id;
+    item.dataset.id = theme.id;
     item.innerHTML = `
       <span class="theme-dot" style="background:${THEME_DOTS[theme.id] ?? '#888'}"></span>
       <span class="theme-name">${theme.name}</span>
@@ -30,14 +31,15 @@ async function init(): Promise<void> {
   }
 
   // Snippet count
-  const countEl = document.getElementById('snippet-count')!;
+  const countEl = document.getElementById('snippet-count');
+  if (!countEl) return;
   countEl.textContent = `${snippets.length} snippet${snippets.length !== 1 ? 's' : ''} configured`;
 
   // No-theme button
-  document.getElementById('no-theme-btn')!.addEventListener('click', () => clearTheme());
+  document.getElementById('no-theme-btn')?.addEventListener('click', () => clearTheme());
 
   // Options button
-  document.getElementById('options-btn')!.addEventListener('click', () => {
+  document.getElementById('options-btn')?.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
   });
 }

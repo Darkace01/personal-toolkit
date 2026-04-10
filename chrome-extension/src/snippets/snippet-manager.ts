@@ -46,10 +46,7 @@ export async function saveSnippet(
   return newSnippet;
 }
 
-export async function updateSnippet(
-  id: string,
-  updates: Partial<CssSnippet>,
-): Promise<CssSnippet> {
+export async function updateSnippet(id: string, updates: Partial<CssSnippet>): Promise<CssSnippet> {
   const snippets = await getSnippets();
   const index = snippets.findIndex((s) => s.id === id);
   if (index === -1) {

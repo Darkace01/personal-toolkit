@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import {
-  generateUuidV4,
-  generateUuidV1,
   generateMultipleUuids,
+  generateUuidV1,
+  generateUuidV4,
   isValidUuid,
 } from '../../lib/uuid-generator';
 
@@ -42,6 +42,7 @@ function UuidGeneratorPage() {
       <div className="flex gap-3 mb-6">
         {(['v4', 'v1'] as const).map((v) => (
           <button
+            type="button"
             key={v}
             onClick={() => setVersion(v)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${version === v ? 'bg-green-600' : 'bg-gray-800 hover:bg-gray-700'}`}
@@ -55,18 +56,21 @@ function UuidGeneratorPage() {
         <code className="text-lg font-mono text-white block mb-4 break-all">{single}</code>
         <div className="flex gap-3">
           <button
+            type="button"
             onClick={regenerate}
             className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-sm font-semibold transition-colors"
           >
             🔄 New UUID
           </button>
           <button
+            type="button"
             onClick={() => copy(single, -1)}
             className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm font-semibold transition-colors"
           >
             {copiedIdx === -1 ? '✅ Copied' : '📋 Copy'}
           </button>
           <button
+            type="button"
             onClick={generateBulk}
             className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm font-semibold transition-colors"
           >
@@ -78,14 +82,15 @@ function UuidGeneratorPage() {
       {bulk.length > 0 && (
         <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 mb-6 space-y-2">
           <h3 className="text-sm font-bold text-gray-400 mb-3">Bulk UUIDs</h3>
-          {bulk.map((u, i) => (
-            <div key={i} className="flex items-center gap-2">
+          {bulk.map((u) => (
+            <div key={u} className="flex items-center gap-2">
               <code className="flex-1 text-sm font-mono text-gray-200 break-all">{u}</code>
               <button
-                onClick={() => copy(u, i)}
+                type="button"
+                onClick={() => copy(u, bulk.indexOf(u))}
                 className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-gray-600"
               >
-                {copiedIdx === i ? '✅' : 'Copy'}
+                {copiedIdx === bulk.indexOf(u) ? '✅' : 'Copy'}
               </button>
             </div>
           ))}

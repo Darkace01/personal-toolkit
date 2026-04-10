@@ -1,10 +1,5 @@
-import {
-  getActiveTheme,
-  getThemeById,
-  buildThemeCss,
-  isGitHubUrl,
-} from '../themes/themes.js';
 import { getSnippetsForUrl } from '../snippets/snippet-manager.js';
+import { buildThemeCss, getActiveTheme, getThemeById, isGitHubUrl } from '../themes/themes.js';
 
 const THEME_STYLE_ID = 'personal-toolkit-github-theme';
 const SNIPPETS_STYLE_ID = 'personal-toolkit-css-snippets';

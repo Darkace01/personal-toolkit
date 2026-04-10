@@ -250,7 +250,7 @@ export function isGitHubUrl(url: string): boolean {
 export async function getActiveTheme(): Promise<string | null> {
   return new Promise((resolve) => {
     chrome.storage.sync.get(['activeTheme'], (result) => {
-      resolve(result['activeTheme'] ?? null);
+      resolve(result.activeTheme ?? null);
     });
   });
 }

@@ -21,10 +21,7 @@ export function isValidBase64(str: string): boolean {
 }
 
 export function encodeBase64Url(text: string): string {
-  return encodeBase64(text)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+  return encodeBase64(text).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 export function decodeBase64Url(encoded: string): string {

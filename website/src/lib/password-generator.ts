@@ -26,7 +26,10 @@ export function generatePassword(options: PasswordOptions): string {
 
   const addSet = (set: string) => {
     const filtered = options.excludeAmbiguous
-      ? set.split('').filter((c) => !AMBIGUOUS.includes(c)).join('')
+      ? set
+          .split('')
+          .filter((c) => !AMBIGUOUS.includes(c))
+          .join('')
       : set;
     if (filtered.length > 0) {
       charset += filtered;
@@ -47,10 +50,7 @@ export function generatePassword(options: PasswordOptions): string {
 
   const length = Math.max(options.length, required.length);
   const remaining = length - required.length;
-  const filled = Array.from(
-    { length: remaining },
-    () => charset[secureRandInt(charset.length)],
-  );
+  const filled = Array.from({ length: remaining }, () => charset[secureRandInt(charset.length)]);
 
   const combined = [...required, ...filled];
 

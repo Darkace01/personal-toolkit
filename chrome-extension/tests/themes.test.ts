@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  getThemes,
-  getThemeById,
   buildThemeCss,
-  isGitHubUrl,
   getActiveTheme,
+  getThemeById,
+  getThemes,
+  isGitHubUrl,
   setActiveTheme,
   THEMES,
   type Theme,
@@ -66,22 +66,18 @@ describe('Each theme has required fields', () => {
     expect(Object.keys(theme.cssVariables).length).toBeGreaterThan(0);
   });
 
-  it.each(THEMES)(
-    'theme "$id" cssVariables keys are valid CSS custom properties',
-    (theme: Theme) => {
-      for (const key of Object.keys(theme.cssVariables)) {
-        expect(key.startsWith('--')).toBe(true);
-      }
-    },
-  );
+  it.each(
+    THEMES,
+  )('theme "$id" cssVariables keys are valid CSS custom properties', (theme: Theme) => {
+    for (const key of Object.keys(theme.cssVariables)) {
+      expect(key.startsWith('--')).toBe(true);
+    }
+  });
 
-  it.each(THEMES)(
-    'theme "$id" has canvas-default and fg-default variables',
-    (theme: Theme) => {
-      expect(theme.cssVariables).toHaveProperty('--color-canvas-default');
-      expect(theme.cssVariables).toHaveProperty('--color-fg-default');
-    },
-  );
+  it.each(THEMES)('theme "$id" has canvas-default and fg-default variables', (theme: Theme) => {
+    expect(theme.cssVariables).toHaveProperty('--color-canvas-default');
+    expect(theme.cssVariables).toHaveProperty('--color-fg-default');
+  });
 });
 
 describe('getThemeById()', () => {
@@ -132,42 +128,47 @@ describe('getThemeById()', () => {
 
 describe('buildThemeCss()', () => {
   it('generates a :root block', () => {
-    const theme = getThemeById('dark-pro')!;
-    const css = buildThemeCss(theme);
+    const theme = getThemeById('dark-pro');
+    expect(theme).toBeDefined();
+    const css = buildThemeCss(theme!);
     expect(css.trim().startsWith(':root {')).toBe(true);
     expect(css.trim().endsWith('}')).toBe(true);
   });
 
   it('includes all CSS variables from the theme', () => {
-    const theme = getThemeById('dracula')!;
-    const css = buildThemeCss(theme);
-    for (const [prop, value] of Object.entries(theme.cssVariables)) {
+    const theme = getThemeById('dracula');
+    expect(theme).toBeDefined();
+    const css = buildThemeCss(theme!);
+    for (const [prop, value] of Object.entries(theme!.cssVariables)) {
       expect(css).toContain(prop);
       expect(css).toContain(value);
     }
   });
 
   it('generates valid CSS variable declarations', () => {
-    const theme = getThemeById('nord')!;
-    const css = buildThemeCss(theme);
+    const theme = getThemeById('nord');
+    expect(theme).toBeDefined();
+    const css = buildThemeCss(theme!);
     // Each variable should appear as "  --var-name: value;"
     const lines = css.split('\n').filter((l) => l.trim().startsWith('--'));
-    expect(lines.length).toBe(Object.keys(theme.cssVariables).length);
+    expect(lines.length).toBe(Object.keys(theme!.cssVariables).length);
     for (const line of lines) {
       expect(line).toMatch(/^\s+--[\w-]+:\s*.+;$/);
     }
   });
 
   it('handles catppuccin theme variables', () => {
-    const theme = getThemeById('catppuccin')!;
-    const css = buildThemeCss(theme);
+    const theme = getThemeById('catppuccin');
+    expect(theme).toBeDefined();
+    const css = buildThemeCss(theme!);
     expect(css).toContain('--color-canvas-default');
     expect(css).toContain('#1e1e2e');
   });
 
   it('handles solarized theme variables', () => {
-    const theme = getThemeById('solarized')!;
-    const css = buildThemeCss(theme);
+    const theme = getThemeById('solarized');
+    expect(theme).toBeDefined();
+    const css = buildThemeCss(theme!);
     expect(css).toContain('#002b36');
   });
 
