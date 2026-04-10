@@ -13,6 +13,13 @@ const NUMBERS = '0123456789';
 const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 const AMBIGUOUS = 'l1Io0O';
 
+/** Returns a cryptographically secure random integer in [0, max). */
+function secureRandInt(max: number): number {
+  const array = new Uint32Array(1);
+  globalThis.crypto.getRandomValues(array);
+  return array[0] % max;
+}
+
 export function generatePassword(options: PasswordOptions): string {
   let charset = '';
   const required: string[] = [];
@@ -23,7 +30,7 @@ export function generatePassword(options: PasswordOptions): string {
       : set;
     if (filtered.length > 0) {
       charset += filtered;
-      required.push(filtered[Math.floor(Math.random() * filtered.length)]);
+      required.push(filtered[secureRandInt(filtered.length)]);
     }
   };
 
@@ -35,21 +42,21 @@ export function generatePassword(options: PasswordOptions): string {
   // Fall back to lowercase if nothing selected
   if (!charset) {
     charset = LOWERCASE;
-    required.push(charset[Math.floor(Math.random() * charset.length)]);
+    required.push(charset[secureRandInt(charset.length)]);
   }
 
   const length = Math.max(options.length, required.length);
   const remaining = length - required.length;
   const filled = Array.from(
     { length: remaining },
-    () => charset[Math.floor(Math.random() * charset.length)],
+    () => charset[secureRandInt(charset.length)],
   );
 
   const combined = [...required, ...filled];
 
-  // Fisher-Yates shuffle
+  // Fisher-Yates shuffle using secure random
   for (let i = combined.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = secureRandInt(i + 1);
     [combined[i], combined[j]] = [combined[j], combined[i]];
   }
 

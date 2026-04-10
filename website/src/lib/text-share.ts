@@ -14,10 +14,16 @@ const SHARE_ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123
 const SHARE_ID_LENGTH = 10;
 const MAX_CONTENT_LENGTH = 100_000;
 
+function secureRandInt(max: number): number {
+  const array = new Uint32Array(1);
+  globalThis.crypto.getRandomValues(array);
+  return array[0] % max;
+}
+
 export function generateShareId(): string {
   return Array.from(
     { length: SHARE_ID_LENGTH },
-    () => SHARE_ID_CHARS[Math.floor(Math.random() * SHARE_ID_CHARS.length)],
+    () => SHARE_ID_CHARS[secureRandInt(SHARE_ID_CHARS.length)],
   ).join('');
 }
 
