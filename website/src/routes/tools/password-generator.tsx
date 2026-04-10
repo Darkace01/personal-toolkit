@@ -20,7 +20,6 @@ const defaultOptions: PasswordOptions = {
   excludeAmbiguous: false,
 };
 
-const _strengthColors = ['red', 'orange', 'yellow', 'lime', 'green'] as const;
 const strengthBg = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500', 'bg-green-500'];
 
 function PasswordGeneratorPage() {

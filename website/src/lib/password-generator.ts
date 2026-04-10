@@ -13,11 +13,16 @@ const NUMBERS = '0123456789';
 const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 const AMBIGUOUS = 'l1Io0O';
 
-/** Returns a cryptographically secure random integer in [0, max). */
+/** Returns a cryptographically secure random integer in [0, max) without modulo bias. */
 function secureRandInt(max: number): number {
-  const array = new Uint32Array(1);
-  globalThis.crypto.getRandomValues(array);
-  return array[0] % max;
+  const limit = 4294967296 - (4294967296 % max);
+  let value: number;
+  do {
+    const array = new Uint32Array(1);
+    globalThis.crypto.getRandomValues(array);
+    value = array[0];
+  } while (value >= limit);
+  return value % max;
 }
 
 export function generatePassword(options: PasswordOptions): string {

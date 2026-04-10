@@ -15,9 +15,14 @@ const SHARE_ID_LENGTH = 10;
 const MAX_CONTENT_LENGTH = 100_000;
 
 function secureRandInt(max: number): number {
-  const array = new Uint32Array(1);
-  globalThis.crypto.getRandomValues(array);
-  return array[0] % max;
+  const limit = 4294967296 - (4294967296 % max);
+  let value: number;
+  do {
+    const array = new Uint32Array(1);
+    globalThis.crypto.getRandomValues(array);
+    value = array[0];
+  } while (value >= limit);
+  return value % max;
 }
 
 export function generateShareId(): string {
