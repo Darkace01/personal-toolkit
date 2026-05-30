@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
 import {
   calculateStrength,
   generateMultiplePasswords,
   generatePassword,
   type PasswordOptions,
-} from '../src/lib/password-generator';
+} from '@toolkit/shared';
+import { describe, expect, it } from 'vitest';
 
 const base: PasswordOptions = {
   length: 16,

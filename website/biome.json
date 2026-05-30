@@ -21,6 +21,7 @@
     }
   },
   "files": {
+    "ignoreUnknown": true,
     "includes": ["src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts", "db/**/*.ts"]
   }
 }

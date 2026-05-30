@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
 import {
   formatUuid,
   generateMultipleUuids,
   generateUuidV1,
   generateUuidV4,
   isValidUuid,
-} from '../src/lib/uuid-generator';
+} from '@toolkit/shared';
+import { describe, expect, it } from 'vitest';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

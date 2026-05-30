@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import {
   generateShareId,
   hasReachedMaxAccess,
@@ -6,7 +5,8 @@ import {
   maskContent,
   type TextShare,
   validateShareContent,
-} from '../src/lib/text-share';
+} from '@toolkit/shared';
+import { describe, expect, it } from 'vitest';
 
 function makeShare(overrides: Partial<TextShare> = {}): TextShare {
   return {

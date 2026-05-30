@@ -28,7 +28,7 @@ async function applyGitHubTheme(): Promise<void> {
     removeStyle(THEME_STYLE_ID);
     return;
   }
-  const theme = getThemeById(themeId);
+  const theme = await getThemeById(themeId);
   if (!theme) {
     removeStyle(THEME_STYLE_ID);
     return;

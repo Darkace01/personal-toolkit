@@ -11,38 +11,47 @@ import {
 } from '../src/themes/themes';
 
 describe('getThemes()', () => {
-  it('returns all 5 themes', () => {
-    const themes = getThemes();
-    expect(themes).toHaveLength(5);
+  beforeEach(() => {
+    vi.resetAllMocks();
+    (chrome.storage.sync.get as ReturnType<typeof vi.fn>).mockImplementation(
+      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+        callback({});
+      },
+    );
   });
 
-  it('returns an array of Theme objects', () => {
-    const themes = getThemes();
+  it('returns all 6 themes', async () => {
+    const themes = await getThemes();
+    expect(themes).toHaveLength(6);
+  });
+
+  it('returns an array of Theme objects', async () => {
+    const themes = await getThemes();
     expect(Array.isArray(themes)).toBe(true);
   });
 
-  it('includes dark-pro theme', () => {
-    const themes = getThemes();
+  it('includes dark-pro theme', async () => {
+    const themes = await getThemes();
     expect(themes.some((t) => t.id === 'dark-pro')).toBe(true);
   });
 
-  it('includes dracula theme', () => {
-    const themes = getThemes();
+  it('includes dracula theme', async () => {
+    const themes = await getThemes();
     expect(themes.some((t) => t.id === 'dracula')).toBe(true);
   });
 
-  it('includes solarized theme', () => {
-    const themes = getThemes();
+  it('includes solarized theme', async () => {
+    const themes = await getThemes();
     expect(themes.some((t) => t.id === 'solarized')).toBe(true);
   });
 
-  it('includes nord theme', () => {
-    const themes = getThemes();
+  it('includes nord theme', async () => {
+    const themes = await getThemes();
     expect(themes.some((t) => t.id === 'nord')).toBe(true);
   });
 
-  it('includes catppuccin theme', () => {
-    const themes = getThemes();
+  it('includes catppuccin theme', async () => {
+    const themes = await getThemes();
     expect(themes.some((t) => t.id === 'catppuccin')).toBe(true);
   });
 });
@@ -81,99 +90,99 @@ describe('Each theme has required fields', () => {
 });
 
 describe('getThemeById()', () => {
-  it('finds dark-pro theme', () => {
-    const theme = getThemeById('dark-pro');
+  it('finds dark-pro theme', async () => {
+    const theme = await getThemeById('dark-pro');
     expect(theme).toBeDefined();
     expect(theme?.id).toBe('dark-pro');
     expect(theme?.name).toBe('Dark Pro');
   });
 
-  it('finds dracula theme', () => {
-    const theme = getThemeById('dracula');
+  it('finds dracula theme', async () => {
+    const theme = await getThemeById('dracula');
     expect(theme).toBeDefined();
     expect(theme?.id).toBe('dracula');
   });
 
-  it('finds solarized theme', () => {
-    const theme = getThemeById('solarized');
+  it('finds solarized theme', async () => {
+    const theme = await getThemeById('solarized');
     expect(theme).toBeDefined();
     expect(theme?.id).toBe('solarized');
   });
 
-  it('finds nord theme', () => {
-    const theme = getThemeById('nord');
+  it('finds nord theme', async () => {
+    const theme = await getThemeById('nord');
     expect(theme).toBeDefined();
     expect(theme?.id).toBe('nord');
   });
 
-  it('finds catppuccin theme', () => {
-    const theme = getThemeById('catppuccin');
+  it('finds catppuccin theme', async () => {
+    const theme = await getThemeById('catppuccin');
     expect(theme).toBeDefined();
     expect(theme?.id).toBe('catppuccin');
   });
 
-  it('returns undefined for unknown id', () => {
-    expect(getThemeById('nonexistent')).toBeUndefined();
+  it('returns undefined for unknown id', async () => {
+    expect(await getThemeById('nonexistent')).toBeUndefined();
   });
 
-  it('returns undefined for empty string', () => {
-    expect(getThemeById('')).toBeUndefined();
+  it('returns undefined for empty string', async () => {
+    expect(await getThemeById('')).toBeUndefined();
   });
 
-  it('is case-sensitive', () => {
-    expect(getThemeById('Dark-Pro')).toBeUndefined();
-    expect(getThemeById('DRACULA')).toBeUndefined();
+  it('is case-sensitive', async () => {
+    expect(await getThemeById('Dark-Pro')).toBeUndefined();
+    expect(await getThemeById('DRACULA')).toBeUndefined();
   });
 });
 
 describe('buildThemeCss()', () => {
-  it('generates a :root block', () => {
-    const theme = getThemeById('dark-pro');
+  it('generates a :root block', async () => {
+    const theme = await getThemeById('dark-pro');
     expect(theme).toBeDefined();
-    const css = buildThemeCss(theme!);
+    const css = buildThemeCss(theme as Theme);
     expect(css.trim().startsWith(':root {')).toBe(true);
     expect(css.trim().endsWith('}')).toBe(true);
   });
 
-  it('includes all CSS variables from the theme', () => {
-    const theme = getThemeById('dracula');
+  it('includes all CSS variables from the theme', async () => {
+    const theme = await getThemeById('dracula');
     expect(theme).toBeDefined();
-    const css = buildThemeCss(theme!);
-    for (const [prop, value] of Object.entries(theme!.cssVariables)) {
+    const css = buildThemeCss(theme as Theme);
+    for (const [prop, value] of Object.entries((theme as Theme).cssVariables)) {
       expect(css).toContain(prop);
       expect(css).toContain(value);
     }
   });
 
-  it('generates valid CSS variable declarations', () => {
-    const theme = getThemeById('nord');
+  it('generates valid CSS variable declarations', async () => {
+    const theme = await getThemeById('nord');
     expect(theme).toBeDefined();
-    const css = buildThemeCss(theme!);
+    const css = buildThemeCss(theme as Theme);
     // Each variable should appear as "  --var-name: value;"
     const lines = css.split('\n').filter((l) => l.trim().startsWith('--'));
-    expect(lines.length).toBe(Object.keys(theme!.cssVariables).length);
+    expect(lines.length).toBe(Object.keys((theme as Theme).cssVariables).length);
     for (const line of lines) {
       expect(line).toMatch(/^\s+--[\w-]+:\s*.+;$/);
     }
   });
 
-  it('handles catppuccin theme variables', () => {
-    const theme = getThemeById('catppuccin');
+  it('handles catppuccin theme variables', async () => {
+    const theme = await getThemeById('catppuccin');
     expect(theme).toBeDefined();
-    const css = buildThemeCss(theme!);
+    const css = buildThemeCss(theme as Theme);
     expect(css).toContain('--color-canvas-default');
     expect(css).toContain('#1e1e2e');
   });
 
-  it('handles solarized theme variables', () => {
-    const theme = getThemeById('solarized');
+  it('handles solarized theme variables', async () => {
+    const theme = await getThemeById('solarized');
     expect(theme).toBeDefined();
-    const css = buildThemeCss(theme!);
+    const css = buildThemeCss(theme as Theme);
     expect(css).toContain('#002b36');
   });
 
-  it('produces distinct CSS for each theme', () => {
-    const themes = getThemes();
+  it('produces distinct CSS for each theme', async () => {
+    const themes = await getThemes();
     const cssOutputs = themes.map((t) => buildThemeCss(t));
     const uniqueOutputs = new Set(cssOutputs);
     expect(uniqueOutputs.size).toBe(themes.length);

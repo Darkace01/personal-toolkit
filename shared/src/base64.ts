@@ -1,6 +1,10 @@
 export function encodeBase64(text: string): string {
   const bytes = new TextEncoder().encode(text);
-  return btoa(Array.from(bytes, (b) => String.fromCharCode(b)).join(''));
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
 }
 
 export function decodeBase64(encoded: string): string {
@@ -14,12 +18,12 @@ export function decodeBase64(encoded: string): string {
 
 export function isValidBase64(str: string): boolean {
   if (!str || str.length === 0) return false;
-  // Standard base64: A-Z, a-z, 0-9, +, /, and optional = padding
-  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(str)) return false;
-  // Length must be a multiple of 4
-  if (str.length % 4 !== 0) return false;
   try {
-    atob(str);
+    // Check if it's a valid atob input (ignoring whitespace)
+    const normalized = str.replace(/\s/g, '');
+    if (normalized.length % 4 !== 0) return false;
+    if (!/^[A-Za-z0-9+/]*={0,2}$/.test(normalized)) return false;
+    atob(normalized);
     return true;
   } catch {
     return false;
@@ -27,13 +31,19 @@ export function isValidBase64(str: string): boolean {
 }
 
 export function encodeBase64Url(text: string): string {
-  return encodeBase64(text).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return encodeBase64(text)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
 }
 
 export function decodeBase64Url(encoded: string): string {
   // Re-add padding
-  const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  let padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
   const pad = padded.length % 4;
-  const padded2 = pad ? padded + '='.repeat(4 - pad) : padded;
-  return decodeBase64(padded2);
+  if (pad) {
+    if (pad === 1) throw new Error('Invalid Base64Url string');
+    padded += '='.repeat(4 - pad);
+  }
+  return decodeBase64(padded);
 }

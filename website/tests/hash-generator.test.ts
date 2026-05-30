@@ -1,5 +1,5 @@
+import { hashAll, hashMd5, hashSha1, hashSha256, hashSha512 } from '@toolkit/shared';
 import { describe, expect, it } from 'vitest';
-import { hashAll, hashMd5, hashSha1, hashSha256, hashSha512 } from '../src/lib/hash-generator';
 
 // Known reference hashes for 'hello'
 const HELLO_MD5 = '5d41402abc4b2a76b9719d911017c592';

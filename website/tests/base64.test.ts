@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
 import {
   decodeBase64,
   decodeBase64Url,
   encodeBase64,
   encodeBase64Url,
   isValidBase64,
-} from '../src/lib/base64';
+} from '@toolkit/shared';
+import { describe, expect, it } from 'vitest';
 
 describe('encodeBase64', () => {
   it('encodes simple ASCII text', () => {

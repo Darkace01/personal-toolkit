@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+dist
+dist-firefox
+.tanstack
+*.log
+pnpm-debug.log*
+.pnpm-debug.log*
+.env
+.env.*
+!.env.example

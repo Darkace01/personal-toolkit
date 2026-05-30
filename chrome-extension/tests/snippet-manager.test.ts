@@ -183,7 +183,9 @@ describe('matchesUrl() – edge cases', () => {
 // ─── getSnippets ─────────────────────────────────────────────────────────────
 
 describe('getSnippets()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('returns stored snippets', async () => {
     const stored = [makeSnippet({ id: 'a' }), makeSnippet({ id: 'b' })];
@@ -207,7 +209,9 @@ describe('getSnippets()', () => {
 // ─── saveSnippet ─────────────────────────────────────────────────────────────
 
 describe('saveSnippet()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('creates a snippet with an auto-generated id', async () => {
     mockStorageWith([]);
@@ -286,7 +290,9 @@ describe('saveSnippet()', () => {
 // ─── updateSnippet ────────────────────────────────────────────────────────────
 
 describe('updateSnippet()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('updates the specified fields', async () => {
     const original = makeSnippet({ id: 'upd-1', name: 'Old Name', updatedAt: 1000 });
@@ -335,7 +341,9 @@ describe('updateSnippet()', () => {
 // ─── deleteSnippet ────────────────────────────────────────────────────────────
 
 describe('deleteSnippet()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('removes the snippet from storage', async () => {
     const s1 = makeSnippet({ id: 'del-1' });
@@ -367,7 +375,9 @@ describe('deleteSnippet()', () => {
 // ─── toggleSnippet ────────────────────────────────────────────────────────────
 
 describe('toggleSnippet()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('disables an enabled snippet', async () => {
     const snippet = makeSnippet({ id: 'tog-1', enabled: true });
@@ -414,7 +424,9 @@ describe('toggleSnippet()', () => {
 // ─── getSnippetsForUrl ────────────────────────────────────────────────────────
 
 describe('getSnippetsForUrl()', () => {
-  beforeEach(() => vi.resetAllMocks());
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   it('returns only enabled snippets matching the URL', async () => {
     const snippets: CssSnippet[] = [

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Toolkit – Tools</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+                        body {
+                          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                          font-size: 14px;
+                          background: #0d1117;
+                          color: #e6edf3;
+                          min-height: 100vh;
+                          display: flex;
+                        }
+                        aside {
+                          width: 260px;
+                          background: #161b22;
+                          border-right: 1px solid #30363d;
+                          padding: 24px 0;
+                          display: flex;
+                          flex-direction: column;
+                        }
+                        aside h1 {
+                          font-size: 18px;
+                          padding: 0 24px 24px;
+                          border-bottom: 1px solid #30363d;
+                          margin-bottom: 12px;
+                        }
+                        .nav-item {
+                          padding: 10px 24px;
+                          cursor: pointer;
+                          transition: background 0.2s;
+                          display: flex;
+                          align-items: center;
+                          gap: 10px;
+                          font-weight: 500;
+                        }
+                        .nav-item:hover { background: #21262d; }
+                        .nav-item.active { background: #1f6feb22; color: #58a6ff; border-right: 2px solid #58a6ff; }
+                        
+                        main { flex: 1; padding: 40px; overflow-y: auto; }
+                        .tool-page { display: none; max-width: 800px; margin: 0 auto; }
+                        .tool-page.active { display: block; }
+                        
+                        h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+                        .description { color: #8b949e; margin-bottom: 24px; }
+                        
+                        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+                        .form-group { margin-bottom: 16px; }
+                        label { display: block; font-size: 12px; font-weight: 600; color: #8b949e; text-transform: uppercase; margin-bottom: 8px; }
+                        textarea, input[type="text"], input[type="number"], select {
+                          width: 100%;
+                          background: #0d1117;
+                          border: 1px solid #30363d;
+                          border-radius: 6px;
+                          color: #e6edf3;
+                          padding: 10px;
+                          font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+                          font-size: 13px;
+                        }
+                        textarea { min-height: 120px; resize: vertical; }
+                        
+                        .btn-group { display: flex; gap: 10px; margin-top: 16px; }
+                        .btn {
+                          padding: 8px 16px;
+                          border-radius: 6px;
+                          border: 1px solid #30363d;
+                          background: #21262d;
+                          color: #e6edf3;
+                          cursor: pointer;
+                          font-weight: 600;
+                          font-size: 13px;
+                          transition: background 0.2s;
+                        }
+                        .btn:hover { background: #30363d; }
+                        .btn-primary { background: #238636; border-color: transparent; }
+                        .btn-primary:hover { background: #2ea043; }
+                        
+                        .result-area { margin-top: 20px; }
+                        .copy-link { font-size: 12px; color: #58a6ff; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 4px; }
+                        .copy-link:hover { text-decoration: underline; }
+                        
+                        .error { color: #f85149; font-size: 12px; margin-top: 4px; }
+                        .success { color: #3fb950; font-size: 12px; margin-top: 4px; }
+                    
+                        /* Specific tool styles */
+                        .strength-meter { height: 4px; background: #21262d; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+                        .strength-bar { height: 100%; width: 0; transition: width 0.3s, background 0.3s; }
+                        .strength-label { font-size: 11px; color: #8b949e; margin-top: 4px; text-transform: capitalize; }
+                        
+                        .bulk-list { max-height: 200px; overflow-y: auto; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 10px; margin-top: 12px; }
+                        .bulk-item { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #21262d; }
+                        .bulk-item:last-child { border-bottom: none; }
+                        .bulk-item code { font-size: 12px; color: #c9d1d9; }
+  </style>
+</head>
+<body>
+  <aside>
+    <h1>🛠 Toolkit</h1>
+    <div class="nav-item active" data-target="base64">🔤 Base64</div>
+    <div class="nav-item" data-target="hash">#️⃣ Hash Generator</div>
+    <div class="nav-item" data-target="json">🧩 JSON Formatter</div>
+    <div class="nav-item" data-target="password">🔐 Password Gen</div>
+    <div class="nav-item" data-target="secrets">🛡️ Secrets Gen</div>
+    <div class="nav-item" data-target="uuid">🆔 UUID Generator</div>
+    <div class="nav-item" data-target="text-share">📋 Text Share</div>
+  </aside>
+
+  <main>
+    <!-- Base64 -->
+    <section id="base64" class="tool-page active">
+      <h2 style="color: #d29922;">🔤 Base64 Encoder/Decoder</h2>
+      <p class="description">Encode and decode Base64 strings, including URL-safe variant.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>Mode</label>
+          <select id="b64-mode">
+            <option value="standard">Standard Base64</option>
+            <option value="url">URL-safe Base64</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="b64-input">Input</label>
+          <textarea id="b64-input" placeholder="Enter text or Base64..."></textarea>
+          <div id="b64-valid-hint" class="success" style="display:none">Valid Base64: yes</div>
+        </div>
+        <div class="btn-group">
+          <button id="b64-encode" class="btn btn-primary" type="button">🔒 Encode</button>
+          <button id="b64-decode" class="btn" type="button">🔓 Decode</button>
+        </div>
+        <div class="result-area">
+          <label for="b64-output">Output</label>
+          <textarea id="b64-output" readonly placeholder="Output will appear here..."></textarea>
+          <span id="b64-copy" class="copy-link">📋 Copy output</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hash Generator -->
+    <section id="hash" class="tool-page">
+      <h2 style="color: #f85149;">#️⃣ Hash Generator</h2>
+      <p class="description">Generate MD5, SHA-1, SHA-256 and SHA-512 hashes.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label for="hash-input">Input</label>
+          <textarea id="hash-input" placeholder="Enter text to hash..."></textarea>
+        </div>
+        <button id="hash-generate" class="btn btn-primary" style="width: 100%;" type="button">🔨 Generate Hashes</button>
+        
+        <div id="hash-results" style="margin-top: 24px; display: none;">
+          <div class="form-group">
+            <label>MD5</label>
+            <input type="text" id="hash-md5" readonly />
+            <span class="copy-link" data-copy="hash-md5">📋 Copy</span>
+          </div>
+          <div class="form-group">
+            <label>SHA-1</label>
+            <input type="text" id="hash-sha1" readonly />
+            <span class="copy-link" data-copy="hash-sha1">📋 Copy</span>
+          </div>
+          <div class="form-group">
+            <label>SHA-256</label>
+            <input type="text" id="hash-sha256" readonly />
+            <span class="copy-link" data-copy="hash-sha256">📋 Copy</span>
+          </div>
+          <div class="form-group">
+            <label>SHA-512</label>
+            <input type="text" id="hash-sha512" readonly />
+            <span class="copy-link" data-copy="hash-sha512">📋 Copy</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JSON Formatter -->
+    <section id="json" class="tool-page">
+      <h2 style="color: #388bfd;">🧩 JSON Formatter</h2>
+      <p class="description">Format, minify, validate, and sort JSON.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label for="json-input">Input</label>
+          <textarea id="json-input" placeholder='{"name":"Dev Toolkit"}'></textarea>
+          <div id="json-valid-hint" class="error"></div>
+        </div>
+        <div class="btn-group">
+          <button id="json-format" class="btn btn-primary" type="button">✨ Format</button>
+          <button id="json-minify" class="btn" type="button">📦 Minify</button>
+          <button id="json-sort" class="btn" type="button">🔤 Sort Keys</button>
+        </div>
+        <div class="result-area">
+          <label for="json-output">Output</label>
+          <textarea id="json-output" readonly placeholder="Output will appear here..."></textarea>
+          <span id="json-copy" class="copy-link">📋 Copy output</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Password Generator -->
+    <section id="password" class="tool-page">
+      <h2 style="color: #f69d50;">🔐 Password Generator</h2>
+      <p class="description">Generate secure passwords with full control.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+            <code id="pass-display" style="flex: 1; font-size: 18px; color: #fff; background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; word-break: break-all;"></code>
+            <button id="pass-copy" class="btn btn-primary" type="button">Copy</button>
+          </div>
+          <div class="strength-meter">
+            <div id="pass-strength-bar" class="strength-bar"></div>
+          </div>
+          <div id="pass-strength-label" class="strength-label">Very Weak</div>
+        </div>
+        
+        <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 12px; margin-top: 24px;">
+          <div class="form-group">
+            <label>Length: <span id="pass-length-val">20</span></label>
+            <input type="range" id="pass-length" min="4" max="128" value="20" style="width: 100%;" />
+          </div>
+          <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3;">
+              <input type="checkbox" id="pass-upper" checked /> Uppercase (A-Z)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3;">
+              <input type="checkbox" id="pass-lower" checked /> Lowercase (a-z)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3;">
+              <input type="checkbox" id="pass-nums" checked /> Numbers (0-9)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3;">
+              <input type="checkbox" id="pass-syms" checked /> Symbols (!@#…)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3;">
+              <input type="checkbox" id="pass-ambig" /> Exclude ambiguous
+            </label>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button id="pass-gen" class="btn btn-primary" style="flex: 1;" type="button">🔄 Generate</button>
+          <button id="pass-bulk" class="btn" type="button">Bulk (10)</button>
+        </div>
+        <div id="pass-bulk-container" class="bulk-list" style="display: none;"></div>
+      </div>
+    </section>
+
+    <!-- Secrets Generator -->
+    <section id="secrets" class="tool-page">
+      <h2 style="color: #d29922;">🛡️ Secrets Generator</h2>
+      <p class="description">Generate secure random bytes for API keys and secrets.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>Byte Length: <span id="secret-length-val">32</span></label>
+          <input type="range" id="secret-length" min="8" max="128" value="32" style="width: 100%;" />
+        </div>
+        <div class="form-group">
+          <label>Format</label>
+          <select id="secret-format">
+            <option value="hex">Hexadecimal</option>
+            <option value="base64">Base64</option>
+            <option value="base64url">Base64 (URL-safe)</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+          <code id="secret-display" style="flex: 1; font-size: 14px; color: #fff; background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d; word-break: break-all;"></code>
+          <button id="secret-copy" class="btn btn-primary" type="button">Copy</button>
+        </div>
+        <button id="secret-gen" class="btn" style="width: 100%;" type="button">🔄 Generate New Secret</button>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Base64 Conversion</h3>
+        <div class="form-group">
+          <label for="secret-conv-input">Input (Text or Hex)</label>
+          <textarea id="secret-conv-input" placeholder="Paste secret or text..."></textarea>
+        </div>
+        <div class="btn-group">
+          <button id="secret-to-b64" class="btn" type="button">To Base64</button>
+          <button id="secret-from-b64" class="btn" type="button">From Base64</button>
+        </div>
+        <div class="result-area">
+          <label>Result</label>
+          <textarea id="secret-conv-output" readonly placeholder="Result will appear here..."></textarea>
+          <span id="secret-conv-copy" class="copy-link">📋 Copy result</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- UUID Generator -->
+    <section id="uuid" class="tool-page">
+      <h2 style="color: #3fb950;">🆔 UUID Generator</h2>
+      <p class="description">Generate v1 and v4 UUIDs, validate existing ones.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>Version</label>
+          <select id="uuid-version">
+            <option value="v4">UUID v4 (Random)</option>
+            <option value="v1">UUID v1 (Timestamp)</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+          <code id="uuid-display" style="flex: 1; font-size: 16px; color: #fff; background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #30363d;"></code>
+          <button id="uuid-copy" class="btn btn-primary" type="button">Copy</button>
+        </div>
+        <div class="btn-group">
+          <button id="uuid-gen" class="btn btn-primary" type="button">🔄 New UUID</button>
+          <button id="uuid-bulk" class="btn" type="button">Bulk (10)</button>
+        </div>
+        <div id="uuid-bulk-container" class="bulk-list" style="display: none;"></div>
+        
+        <div style="margin-top: 32px;">
+          <label>Validate UUID</label>
+          <input type="text" id="uuid-validate-input" placeholder="Paste a UUID to validate..." />
+          <div id="uuid-validate-hint" style="margin-top: 8px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Text Share -->
+    <section id="text-share" class="tool-page">
+      <h2 style="color: #a371f7;">📋 Text Share</h2>
+      <p class="description">Share text securely with expiry and access limits.</p>
+      
+      <div class="card">
+        <div class="form-group">
+          <label>Title (optional)</label>
+          <input type="text" id="share-title" placeholder="My shared snippet" />
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea id="share-content" placeholder="Paste content to share..."></textarea>
+          <div id="share-error" class="error"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Expiry (minutes)</label>
+            <input type="number" id="share-expiry" value="60" min="1" />
+          </div>
+          <div class="form-group">
+            <label>Max Access</label>
+            <input type="number" id="share-max" placeholder="Unlimited" min="1" />
+          </div>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; text-transform: none; color: #e6edf3; margin-bottom: 16px;">
+          <input type="checkbox" id="share-burn" /> Burn after read
+        </label>
+        <button id="share-create" class="btn btn-primary" style="width: 100%;" type="button">🔗 Create Share</button>
+        
+        <div id="share-result" style="margin-top: 20px; display: none;">
+          <label>Share ID</label>
+          <code id="share-id-display" style="display: block; padding: 10px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #a371f7; font-weight: bold;"></code>
+          <p style="font-size: 11px; color: #8b949e; margin-top: 4px;">* Note: In the extension, shares are stored in memory for this session only.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="tools.ts"></script>
+</body>
+</html>

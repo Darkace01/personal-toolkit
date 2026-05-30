@@ -13,7 +13,7 @@ export interface CssSnippet {
 const STORAGE_KEY = 'cssSnippets';
 
 export function generateId(): string {
-  return crypto.randomUUID();
+  return `snippet-${crypto.randomUUID()}`;
 }
 
 export async function getSnippets(): Promise<CssSnippet[]> {

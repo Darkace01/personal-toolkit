@@ -10,7 +10,7 @@ const THEME_DOTS: Record<string, string> = {
 };
 
 async function init(): Promise<void> {
-  const themes = getThemes();
+  const themes = await getThemes();
   const activeId = await getActiveTheme();
   const snippets = await getSnippets();
 
@@ -22,7 +22,7 @@ async function init(): Promise<void> {
     item.className = `theme-item${activeId === theme.id ? ' active' : ''}`;
     item.dataset.id = theme.id;
     item.innerHTML = `
-      <span class="theme-dot" style="background:${THEME_DOTS[theme.id] ?? '#888'}"></span>
+      <span class="theme-dot" style="background:${THEME_DOTS[theme.id] ?? theme.cssVariables?.['--color-accent-fg'] ?? '#888'}"></span>
       <span class="theme-name">${theme.name}</span>
       ${activeId === theme.id ? '<span class="checkmark">✓</span>' : ''}
     `;
@@ -41,6 +41,11 @@ async function init(): Promise<void> {
   // Options button
   document.getElementById('options-btn')?.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
+  });
+
+  // Tools button
+  document.getElementById('tools-btn')?.addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/tools/tools.html') });
   });
 }
 

@@ -1,6 +1,12 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from '@tanstack/react-form';
+import { hashAll } from '@toolkit/shared';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
-import { hashAll } from '../../lib/hash-generator';
+import { Copy, RefreshCw } from 'lucide-react';
+import * as React from 'react';
 
 export const Route = createFileRoute('/tools/hash-generator')({
   component: HashGeneratorPage,
@@ -15,12 +21,20 @@ const ALGORITHM_LABELS: Record<string, string> = {
 };
 
 function HashGeneratorPage() {
-  const [input, setInput] = useState('Hello, world!');
-  const [hashes, setHashes] = useState<Record<string, string>>({});
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [hashes, setHashes] = React.useState<Record<string, string>>({});
+  const [copiedKey, setCopiedKey] = React.useState<string | null>(null);
+
+  const form = useForm({
+    defaultValues: {
+      input: 'Hello, world!',
+    },
+    onSubmit: async ({ value }) => {
+      setHashes(hashAll(value.input));
+    },
+  });
 
   const generate = () => {
-    setHashes(hashAll(input));
+    setHashes(hashAll(form.state.values.input));
   };
 
   const copy = (key: string, value: string) => {
@@ -29,58 +43,83 @@ function HashGeneratorPage() {
     setTimeout(() => setCopiedKey(null), 1500);
   };
 
-  return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-extrabold mb-2 text-red-400">#️⃣ Hash Generator</h1>
-      <p className="text-gray-400 mb-8">Generate MD5, SHA-1, SHA-256, and SHA-512 hashes.</p>
+  // Auto-generate on input change or mount
+  React.useEffect(() => {
+    generate();
+  }, [form.state.values.input]);
 
-      <div className="mb-4">
-        <label
-          htmlFor="hash-input"
-          className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block"
-        >
-          Input
-        </label>
-        <textarea
-          id="hash-input"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="w-full h-32 bg-gray-900 border border-gray-700 rounded-xl p-4 font-mono text-sm text-gray-200 resize-none focus:outline-none focus:border-red-500"
-          placeholder="Enter text to hash..."
-        />
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Hash Generator</h1>
+        <p className="text-muted-foreground">
+          Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from any text.
+        </p>
       </div>
 
-      <button
-        type="button"
-        onClick={generate}
-        className="mb-8 w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 font-bold transition-all"
-      >
-        🔨 Generate Hashes
-      </button>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="h-fit">
+          <CardHeader>
+            <CardTitle>Input</CardTitle>
+            <CardDescription>Enter the text you want to hash</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <form.Field
+              name="input"
+              children={(field) => (
+                <div className="grid w-full gap-1.5">
+                  <Label htmlFor={field.name}>Source Text</Label>
+                  <Textarea
+                    id={field.name}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="min-h-[200px] font-mono text-sm"
+                    placeholder="Enter text to hash..."
+                  />
+                </div>
+              )}
+            />
+            <Button onClick={generate} className="w-full" size="lg" variant="secondary">
+              <RefreshCw className="mr-2 size-4" /> Regenerate Hashes
+            </Button>
+          </CardContent>
+        </Card>
 
-      {Object.keys(hashes).length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {ALGORITHMS.map((algo) => (
-            <div key={algo} className="bg-gray-900 border border-gray-700 rounded-xl p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-red-400 uppercase">
-                  {ALGORITHM_LABELS[algo]}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => copy(algo, hashes[algo])}
-                  className="text-xs px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 transition-colors"
-                >
-                  {copiedKey === algo ? '✅ Copied' : '📋 Copy'}
-                </button>
-              </div>
-              <code className="text-xs font-mono text-gray-300 break-all block">
-                {hashes[algo]}
-              </code>
-            </div>
+            <Card key={algo} className="overflow-hidden transition-all hover:border-primary/30">
+              <CardHeader className="py-4 bg-muted/30">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-bold uppercase tracking-widest text-primary">
+                    {ALGORITHM_LABELS[algo]}
+                  </CardTitle>
+                  {hashes[algo] && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copy(algo, hashes[algo])}
+                      className="h-8 px-3 text-xs font-bold"
+                    >
+                      {copiedKey === algo ? (
+                        <span className="text-green-500">COPIED</span>
+                      ) : (
+                        <>
+                          <Copy className="mr-2 size-3" /> COPY
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 bg-background">
+                <div className="rounded-md font-mono text-[11px] break-all leading-relaxed select-all">
+                  {hashes[algo] || <span className="text-muted-foreground italic">Pending...</span>}
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

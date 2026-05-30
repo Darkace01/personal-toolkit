@@ -2,6 +2,7 @@ export interface Theme {
   id: string;
   name: string;
   description: string;
+  isCustom?: boolean;
   cssVariables: Record<string, string>;
 }
 
@@ -221,14 +222,89 @@ export const THEMES: Theme[] = [
       '--color-input-border': '#45475a',
     },
   },
+  {
+    id: 'retro-terminal',
+    name: 'Retro Terminal',
+    description: 'A classic high-contrast amber/green on black terminal aesthetic',
+    cssVariables: {
+      '--color-canvas-default': '#000000',
+      '--color-canvas-subtle': '#0a0a0a',
+      '--color-canvas-inset': '#000000',
+      '--color-canvas-overlay': '#111111',
+      '--color-fg-default': '#33ff00',
+      '--color-fg-muted': '#22aa00',
+      '--color-fg-subtle': '#115500',
+      '--color-fg-on-emphasis': '#000000',
+      '--color-accent-fg': '#ffb000',
+      '--color-accent-emphasis': '#ff9900',
+      '--color-accent-muted': 'rgba(255,176,0,0.4)',
+      '--color-accent-subtle': 'rgba(255,176,0,0.15)',
+      '--color-success-fg': '#33ff00',
+      '--color-success-emphasis': '#22dd00',
+      '--color-success-muted': 'rgba(51,255,0,0.4)',
+      '--color-success-subtle': 'rgba(51,255,0,0.15)',
+      '--color-attention-fg': '#ffb000',
+      '--color-attention-emphasis': '#ff9900',
+      '--color-danger-fg': '#ff0000',
+      '--color-danger-emphasis': '#cc0000',
+      '--color-done-fg': '#00ffff',
+      '--color-done-emphasis': '#00dddd',
+      '--color-sponsors-fg': '#ff00ff',
+      '--color-border-default': '#33ff00',
+      '--color-border-muted': '#22aa00',
+      '--color-neutral-emphasis': '#22aa00',
+      '--color-header-bg': '#000000',
+      '--color-header-logo': '#33ff00',
+      '--color-header-search-bg': '#000000',
+      '--color-header-search-border': '#33ff00',
+      '--color-btn-bg': '#000000',
+      '--color-btn-text': '#33ff00',
+      '--color-btn-primary-bg': '#33ff00',
+      '--color-btn-primary-text': '#000000',
+      '--color-input-bg': '#000000',
+      '--color-input-border': '#33ff00',
+    },
+  },
 ];
 
-export function getThemes(): Theme[] {
-  return THEMES;
+export async function getCustomThemes(): Promise<Theme[]> {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['customThemes'], (result) => {
+      resolve(result.customThemes ?? []);
+    });
+  });
 }
 
-export function getThemeById(id: string): Theme | undefined {
-  return THEMES.find((t) => t.id === id);
+export async function saveCustomTheme(theme: Theme): Promise<void> {
+  const customThemes = await getCustomThemes();
+  const existingIndex = customThemes.findIndex((t) => t.id === theme.id);
+  theme.isCustom = true;
+  if (existingIndex >= 0) {
+    customThemes[existingIndex] = theme;
+  } else {
+    customThemes.push(theme);
+  }
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ customThemes }, resolve);
+  });
+}
+
+export async function deleteCustomTheme(id: string): Promise<void> {
+  const customThemes = await getCustomThemes();
+  const filtered = customThemes.filter((t) => t.id !== id);
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ customThemes: filtered }, resolve);
+  });
+}
+
+export async function getThemes(): Promise<Theme[]> {
+  const customThemes = await getCustomThemes();
+  return [...THEMES, ...customThemes];
+}
+
+export async function getThemeById(id: string): Promise<Theme | undefined> {
+  const themes = await getThemes();
+  return themes.find((t) => t.id === id);
 }
 
 export function buildThemeCss(theme: Theme): string {
